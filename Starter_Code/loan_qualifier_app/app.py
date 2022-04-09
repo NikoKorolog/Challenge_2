@@ -7,30 +7,41 @@ Example:
     $ python app.py
 """
 import sys
+import csv
 import fire
 import questionary
 from pathlib import Path
 
 from qualifier.utils.fileio import load_csv
+from qualifier.utils.fileio import save_csv #I added my save csv function to the fileio file
 
 from qualifier.utils.calculators import (
     calculate_monthly_debt_ratio,
     calculate_loan_to_value_ratio,
 )
 
-from qualifier.filters.max_loan_size import filter_max_loan_size
-from qualifier.filters.credit_score import filter_credit_score
-from qualifier.filters.debt_to_income import filter_debt_to_income
-from qualifier.filters.loan_to_value import filter_loan_to_value
+from qualifier.filters.max_loan_size import filter_max_loan_size         #this is pre-written
+from qualifier.filters.credit_score import filter_credit_score           #this is pre-written
+from qualifier.filters.debt_to_income import filter_debt_to_income       #this is pre-written
+from qualifier.filters.loan_to_value import filter_loan_to_value         #this is pre-written
 
 
 def load_bank_data():
+   csvpath1 = questionary.text("what is the file path for the latest banking data?").ask()
+   csvpath2 = Path(csvpath1)
+   with open(csvpath2) as csvfile: #with and open open a connection from the Python program to the file you're working with -- in this case, csvfile
+    data = csv.reader(csvfile)
+    for row in data:  #row is declared here and is assigned to EVERY ROW IN THE CSV FILE. this variable could be anything - "foo" "banaa" whatever!
+        print("here is the bank data from the rate sheet:")
+        print(row)
+    return data
+
     """Ask for the file path to the latest banking data and load the CSV file.
+
 
     Returns:
         The bank data from the data rate sheet CSV file.
     """
-
     csvpath = questionary.text("Enter a file path to a rate-sheet (.csv):").ask()
     csvpath = Path(csvpath)
     if not csvpath.exists():
@@ -62,8 +73,18 @@ def get_applicant_info():
 
 
 def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_value):
+   ''' #this is how I would have gone about writing this code rather than splitting the functions among different documents.
+        for each_loan in bank_data:
+            qualifying_loans = []
+            if credit_score >= each_loan["credit_score"]:
+                if debt / income < each_loan["max_DTI"]:
+                    if loan / home_value < each_loan["Max_LTV"]
+                        qualifying_loans.append(each_loan)
+        return qualifying_loans      
+'''
+    
     """Determine which loans the user qualifies for.
-
+    
     Loan qualification criteria is based on:
         - Credit Score
         - Loan Size
@@ -82,6 +103,8 @@ def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_valu
         A list of the banks willing to underwrite the loan.
 
     """
+   
+
 
     # Calculate the monthly debt ratio
     monthly_debt_ratio = calculate_monthly_debt_ratio(debt, income)
@@ -101,10 +124,24 @@ def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_valu
 
     return bank_data_filtered
 
+#this function takes a path and a data file and saves it as a csv THIS CODE GOES INTO qualifier.utils.fileio
+def save_csv(path, data):
+    csvpath = Path(path)            #
+    with open(csvpath, 'w', newline='') as csvfile:                                              
+            csvwriter = csv.writer(csvfile)        
+            for row in data:                       
+                csvwriter.writerow(row.values())
+    return data            
 
+#this code saves qualifying loans
 def save_qualifying_loans(qualifying_loans):
-    """Saves the qualifying loans to a CSV file.
+    confirm = questionary.confirm("would you like to save your qualifying loans").ask()
+    if confirm:
+        qualifying_loans_path = questionary.text("where would you like to save the qualifying loans?").ask
+        save_csv(qualifying_loans_path, qualifying_loans)
+    return qualifying_loans   
 
+    """Saves the qualifying loans to a CSV file.
     Args:
         qualifying_loans (list of lists): The qualifying bank loans.
     """
@@ -115,18 +152,18 @@ def save_qualifying_loans(qualifying_loans):
 def run():
     """The main function for running the script."""
 
-    # Load the latest Bank data
+    # Load the latest Bank data                                                     #as of 3:09 april 9 this works
     bank_data = load_bank_data()
 
     # Get the applicant's information
-    credit_score, debt, income, loan_amount, home_value = get_applicant_info()
-
-    # Find qualifying loans
+    credit_score, debt, income, loan_amount, home_value = get_applicant_info()    #as of 3:09 april 9 this also works
+ 
+    # Find qualifying loans                                                       #as of 3:09 april 9 this is where problems start
     qualifying_loans = find_qualifying_loans(
         bank_data, credit_score, debt, income, loan_amount, home_value
     )
 
-    # Save qualifying loans
+    # Save qualifying loans                                                       #as of 3:09 april 9 not sure if this works
     save_qualifying_loans(qualifying_loans)
 
 
