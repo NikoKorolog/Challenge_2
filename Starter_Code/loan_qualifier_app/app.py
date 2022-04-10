@@ -94,10 +94,10 @@ def save_csv(path, data):
 
 #this code saves qualifying loans
 def save_qualifying_loans(qualifying_loans):
-    confirm = questionary.confirm("would you like to save your qualifying loans").ask()
-    if confirm:
+    confirm_save = questionary.confirm("would you like to save your qualifying loans").ask()
+    if confirm_save == True:
         qualifying_loans_path = questionary.text("where would you like to save the qualifying loans?").ask
-        save_csv(Path(qualifying_loans_path), qualifying_loans)
+        save_csv(qualifying_loans_path, qualifying_loans)
     return qualifying_loans   
 
     """Saves the qualifying loans to a CSV file.
