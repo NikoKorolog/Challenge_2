@@ -27,15 +27,6 @@ from qualifier.filters.loan_to_value import filter_loan_to_value         #this i
 
 
 def load_bank_data():
-   csvpath1 = questionary.text("what is the file path for the latest banking data?").ask()
-   csvpath2 = Path(csvpath1)
-   with open(csvpath2) as csvfile: #with and open open a connection from the Python program to the file you're working with -- in this case, csvfile
-    data = csv.reader(csvfile)
-    for row in data:  #row is declared here and is assigned to EVERY ROW IN THE CSV FILE. this variable could be anything - "foo" "banaa" whatever!
-        print("here is the bank data from the rate sheet:")
-        print(row)
-    return data
-
     """Ask for the file path to the latest banking data and load the CSV file.
 
 
@@ -73,38 +64,6 @@ def get_applicant_info():
 
 
 def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_value):
-   ''' #this is how I would have gone about writing this code rather than splitting the functions among different documents.
-        for each_loan in bank_data:
-            qualifying_loans = []
-            if credit_score >= each_loan["credit_score"]:
-                if debt / income < each_loan["max_DTI"]:
-                    if loan / home_value < each_loan["Max_LTV"]
-                        qualifying_loans.append(each_loan)
-        return qualifying_loans      
-'''
-    
-    """Determine which loans the user qualifies for.
-    
-    Loan qualification criteria is based on:
-        - Credit Score
-        - Loan Size
-        - Debit to Income ratio (calculated)
-        - Loan to Value ratio (calculated)
-
-    Args:
-        bank_data (list): A list of bank data.
-        credit_score (int): The applicant's current credit score.
-        debt (float): The applicant's total monthly debt payments.
-        income (float): The applicant's total monthly income.
-        loan (float): The total loan amount applied for.
-        home_value (float): The estimated home value.
-
-    Returns:
-        A list of the banks willing to underwrite the loan.
-
-    """
-   
-
 
     # Calculate the monthly debt ratio
     monthly_debt_ratio = calculate_monthly_debt_ratio(debt, income)
@@ -128,9 +87,9 @@ def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_valu
 def save_csv(path, data):
     csvpath = Path(path)            #
     with open(csvpath, 'w', newline='') as csvfile:                                              
-            csvwriter = csv.writer(csvfile)        
-            for row in data:                       
-                csvwriter.writerow(row.values())
+        csvwriter = csv.writer(csvfile)        
+        for row in data:                       
+            csvwriter.writerow(row.values())
     return data            
 
 #this code saves qualifying loans
@@ -138,7 +97,7 @@ def save_qualifying_loans(qualifying_loans):
     confirm = questionary.confirm("would you like to save your qualifying loans").ask()
     if confirm:
         qualifying_loans_path = questionary.text("where would you like to save the qualifying loans?").ask
-        save_csv(qualifying_loans_path, qualifying_loans)
+        save_csv(Path(qualifying_loans_path), qualifying_loans)
     return qualifying_loans   
 
     """Saves the qualifying loans to a CSV file.
