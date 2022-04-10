@@ -1,33 +1,29 @@
 # Project Title
-
-Just after the title, introduce your project by describing attractively what the project is about and what is the main problem that inspires you to create this project or what is the main contribution for the potential user of your project.
-
+Modularized Loan Calculator
 ---
 
 ## Technologies
 
-Describe the technologies required to use your project such as programming languages, libraries, frameworks, and operating systems. Be sure to include the specific versions of any critical dependencies that you have used in the stable version of your project.
+Modularized python functions, read-write csv, CLI.
 
 ---
 
 ## Installation Guide
 
-In this section, you should include detailed installation notes containing code blocks and screenshots.
-
+Download an install dependencies Fire and Pathlib before running this program.
 ---
 
 ## Usage
 
-This section should include screenshots, code blocks, or animations explaining how to use your project.
-
----
+Once executed from command line, follow the straightforward command line interface prompts and fill out the relevant data to compare your stats to find applicable loans.
 
 ## Contributors
 
-In this section, list all the people who contribute to this project. You might want recruiters or potential collaborators to reach you, so include your contact email and, optionally, your LinkedIn or Twitter profile.
+Berkeley Fintech starter code author
+Niko Korolog
 
 ---
 
 ## License
 
-When you share a project on a repository, especially a public one, it's important to choose the right license to specify what others can and can't with your source code and files. Use this section to include the license you want to use.
+Open source afaik
